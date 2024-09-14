@@ -73,7 +73,6 @@ def show_404_page(error):
 class List():
     def Gomi_list():
         aa = gomi_copy.Garbage()
-        #gomi = {"あ":"リサイクル","か":"燃える","き":"燃えない","ああ":"燃えるごみ\xa0"}
         return aa.Oshu_garbage()
     def Japanese_list():
         japanese = {"あ":["あ","い","う","え","お"],
