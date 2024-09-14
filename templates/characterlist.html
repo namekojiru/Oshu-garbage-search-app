@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %} 五十音順一覧 {% endblock %}
+
+{% block heading %} 五十音順一覧 {% endblock %}
+
+{% block explanation %}
+<p>このサイトでは奥州市のごみを簡単に検索することが出来ます</p>
+{% endblock %}
+
+{% block content %}
+
+<table border="1">
+{% for character in characterlist %}
+    <tr>
+
+        <td><a href="{{ url_for('list',id=characterlist.index(character)+1 ) }}">{{ character }}</a></td>
+    </tr>
+{% endfor %}
+</table>
+
+<a href="/">top画面</a>
+
+{% endblock %}

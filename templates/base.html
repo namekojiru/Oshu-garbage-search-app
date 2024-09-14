@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} タイトル {% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='sanitize.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='gomi.css')}}">
+</head>
+<body>
+    <h1> {% block heading %} 見出し {% endblock %} </h1>
+    <br>
+    {% block explanation %} 説明 {% endblock %}
+    <br>
+    {% block content %} 内容 {% endblock %}
+</body>
+</html>

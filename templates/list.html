@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %} 一覧 {% endblock %}
+
+{% block heading  %} 一覧({{character}}行) {% endblock %}
+
+{% block explanation %} {{character}}行の一覧です {% endblock %}
+
+{% block content %}
+<table border="1">
+    <tr>
+        <th>ゴミ</th>
+        <th>分別</th>
+    </tr>
+{% for i in list %}
+
+    <tr>
+        <td>{{ i[0] }}</td>
+        <td>{{ i[1] }}</td>
+    </tr>
+    
+{% endfor %}
+</table>
+
+<a href="/characterlist">五十音順一覧</a>
+<br>
+<a href="/">top画面</a>
+
+{% endblock %}

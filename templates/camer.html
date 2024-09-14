@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %} 画像 {% endblock %}
+
+{% block heading %} 画像で検索 {% endblock %}
+
+{% block explanation %}
+<p>このサイトでは奥州市のごみを簡単に検索することが出来ます</p>
+{% endblock %}
+
+
+{% block content %}
+
+<form action="/a" method="post">
+    <input type="file" accept="image/*" name="file">
+    <input type="submit" value="検索">
+</form>
+<h2>検索結果</h2>
+<a href="/">top画面</a>
+
+{% endblock %}
+
