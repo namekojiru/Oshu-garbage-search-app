@@ -17,12 +17,16 @@
 </form>
 {% if not search == "" %}
     <h2>"{{search}}"の検索結果</h2>
-    {% if result == {} %}
+    {% if result == "" %}
         <p>ありませんでした</p>
     {% else %}
         <ul>
-            {% for key in result %}
-            <li>{{ key }} : {{ result[key] }}</li>
+            {% for i in result %}
+                {% if i[2] == "\xa0" %}
+                    <li>{{ i[0] }} : {{ i[1] }}</li>
+                {% else %}
+                    <li>{{ i[0] }}[{{ i[2]}}] : {{ i[1] }}</li>
+                {% endif %}
             {% endfor %}    
         </ul>
     {% endif %}

@@ -3,7 +3,8 @@ from flask import render_template
 from flask import request
 from flask import url_for
 from flask import redirect
-import gomi_copy
+import pickle
+
 
 
 app = Flask(__name__)
@@ -17,13 +18,16 @@ def index():
 @app.route("/search",methods=["POST"])
 def html():
     search = request.form["search"]
-    result = {}
+    result = []
     gomi = List.Gomi_list()
     
-    for i in gomi.keys():
-        
-        if search in i:
-            result[i] = gomi[i]
+    for i in gomi:
+        for f in i:
+            if search in f[0]:
+                if type(f) != str:
+                    result.append(f)
+
+    print(result)
         
     return render_template("top.html", result=result,search=search)
 
@@ -34,22 +38,30 @@ def camer():
 def a():    
     file = request.files["file"]
 
-    
-    
     return render_template("camer.html")
 
 
 
 @app.route("/characterlist")
 def characterlist():
-    character = ["あ","か","が","さ","ざ","た","だ","な","は","ば","ぱ","ま","や","ら","わ"]
-    return render_template("characterlist.html",characterlist=character)
+    gomi = List.Gomi_list()
+    gomi_initials = []
+    for i in gomi:
+        for f in i:
+            if type(f) == str:
+                gomi_initials.append(f)
+    return render_template("characterlist.html",gomi=gomi_initials)
 
 @app.route("/list/<int:id>")
 def list(id):
     gomi = List.Gomi_list()
-    character = ["あ","か","が","さ","ざ","た","だ","な","は","ば","ぱ","ま","や","ら","わ"]
-    japan = character[id-1]
+    gomi_initials = []
+    for i in gomi:
+        for f in i:
+            if type(f) == str:
+                gomi_initials.append(f)
+    
+    japan = gomi_initials[id]
     for i in gomi:
         if i[0] == japan:
             new_gomi = i
@@ -69,16 +81,11 @@ def show_404_page(error):
     return render_template("errors/404.html") , 404
 
 
-
 class List():
     def Gomi_list():
-        aa = gomi_copy.Garbage()
-        return aa.Oshu_garbage()
-    def Japanese_list():
-        japanese = {"あ":["あ","い","う","え","お"],
-                    "か":["か","き","く","け","こ"],
-                    }
-        return japanese
+        with open("linklist.txt", "rb") as f:
+            gomi = pickle.load(f)
+        return gomi
 
 
 

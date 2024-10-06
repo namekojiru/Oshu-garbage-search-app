@@ -1,5 +1,19 @@
+body{
+    background-color: #ffffff;
+}
+
+h1{
+    color: #4e4e4e;
+}
+
+h2{
+    color: #5e5e5e;
+}
+
+
 p{
     text-indent: 1em;
+    color: #6e6e6e;
 }
 
 hr {

@@ -11,10 +11,9 @@
 {% block content %}
 
 <table border="1">
-{% for character in characterlist %}
+{% for i in gomi %}
     <tr>
-
-        <td><a href="{{ url_for('list',id=characterlist.index(character)+1 ) }}">{{ character }}</a></td>
+<td><a href="{{ url_for('list',id=loop.index0 ) }}">{{ i }}</a></td>
     </tr>
 {% endfor %}
 </table>
