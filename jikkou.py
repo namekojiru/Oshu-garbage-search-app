@@ -31,14 +31,12 @@ def html():
         
     return render_template("top.html", result=result,search=search)
 
-@app.route("/camer")
+@app.route("/camer",methods=["POST"])
 def camer():
-    return render_template("camer.html")
-@app.route("/a",methods=["POST"])
-def a():    
     file = request.files["file"]
 
     return render_template("camer.html")
+
 
 
 
