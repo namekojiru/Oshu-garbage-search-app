@@ -5,14 +5,19 @@
 {% block heading %} 検索履歴 {% endblock %}
 
 {% block explanation %}
-<p>このサイトでは奥州市のごみを簡単に検索することが出来ます</p>
+<p>検索履歴</p>
 {% endblock %}
 
 
 {% block content %}
-<ul>
-    <li>a</li>
-</ul>
+<table border="1">
+{% for i in Rireki.select() %}
+    <tr>
+        <td>{{ i.time }}</td>
+        <td><a href="/">{{ i.gomi }}</a></td>
+    </tr>
+{% endfor %}
+</table>
 <a href="/">top画面</a>
 
 {% endblock %}

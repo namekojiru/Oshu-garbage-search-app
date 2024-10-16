@@ -4,7 +4,8 @@ from flask import request
 from flask import url_for
 from flask import redirect
 import pickle
-
+from peewee import *
+import datetime
 
 
 app = Flask(__name__)
@@ -19,6 +20,11 @@ def index():
 def html():
     search = request.form["search"]
     result = []
+
+    dt_now = datetime.datetime.now()
+    a = Rireki(gomi = search, time = dt_now)
+    a.save()
+
     gomi = List.Gomi_list()
     
     for i in gomi:
@@ -27,7 +33,6 @@ def html():
                 if type(f) != str:
                     result.append(f)
 
-    print(result)
         
     return render_template("top.html", result=result,search=search)
 
@@ -69,7 +74,7 @@ def list(id):
     return render_template("list.html",list=new_gomi,character=japan)
 @app.route("/history")
 def history():
-    return render_template("history.html")
+    return render_template("history.html",Rireki=Rireki)
 
 @app.errorhandler(404)
 def show_404_page(error):
@@ -85,7 +90,15 @@ class List():
             gomi = pickle.load(f)
         return gomi
 
+db = SqliteDatabase('rirekis.db')
 
+
+class Rireki(Model):
+    gomi = CharField()
+    time = DateTimeField()
+
+    class Meta:
+        database = db
 
 app.run()
 
