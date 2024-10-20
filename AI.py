@@ -17,7 +17,7 @@ class_names = open("c:/Oshu-garbage-search-app/labels.txt", "r").readlines()
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 # Replace this with the path to your image
-image = Image.open("c:/Oshu-garbage-search-app/ペットボトル.jpg").convert("RGB")
+image = Image.open("c:/Oshu-garbage-search-app/ダウンロード.jfif").convert("RGB")
 
 # resizing the image to be at least 224x224 and then cropping from the center
 size = (224, 224)
@@ -40,4 +40,4 @@ confidence_score = prediction[0][index]
 
 # Print prediction and confidence score
 print("Class:", class_name[2:], end="")
-print("Confidence Score:", confidence_score)
+print("Confidence Score:", confidence_score*100, "%")
