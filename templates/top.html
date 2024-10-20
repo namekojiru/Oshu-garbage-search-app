@@ -12,8 +12,8 @@
 {% block content %}
 
 <form action="/search" method="post">
-    <input type="search" name="search">
-    <input type="submit" value="検索">
+    <input type="search" name="search" class="input-group-text">
+    <input type="submit" value="検索" class="btn btn-info">
 </form>
 {% if not search == "" %}
     <h2>"{{search}}"の検索結果</h2>
