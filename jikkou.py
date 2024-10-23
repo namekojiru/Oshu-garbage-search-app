@@ -16,32 +16,40 @@ def index():
     return render_template("top.html")
 
 
-@app.route("/search",methods=["POST"])
+@app.route("/search",methods=["POST","GET"])
 def html():
-    search = request.form["search"]
-    result = []
+    if request.method == "POST":
+        search = request.form["search"]
+        result = []
 
-    dt_now = datetime.datetime.now()
-    a = Rireki(gomi = search, time = dt_now)
-    a.save()
+        dt_now = datetime.datetime.now()
+        a = Rireki(gomi = search, time = dt_now)
+        a.save()
 
-    gomi = List.Gomi_list()
-    
-    for i in gomi:
-        for f in i:
-            if search in f[0]:
-                if type(f) != str:
-                    result.append(f)
-
+        gomi = List.Gomi_list()
         
-    return render_template("top.html", result=result,search=search)
+        for i in gomi:
+            for f in i:
+                if search in f[0]:
+                    if type(f) != str:
+                        result.append(f)
+        return render_template("top.html", result=result, search=search)
 
-@app.route("/camer",methods=["POST"])
+    else:
+        return render_template("top.html")
+
+            
+
+@app.route("/camer",methods=["POST","GET"])
 def camer():
-    file = request.files["file"]
+    if request.method == 'POST':
+        file = request.files["file"]
+        
+        return render_template("camer.html", file=file)
 
-    return render_template("camer.html")
 
+    else:
+        return render_template("camer.html")
 
 
 

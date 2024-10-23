@@ -11,11 +11,12 @@
 
 {% block content %}
 
-<form action="/a" method="post">
+<form action="/camer" method="post" enctype="multipart/form-data">
     <input type="file" accept="image/*" name="file">
     <input type="submit" value="検索">
 </form>
 <h2>検索結果</h2>
+<img src="{{file}}" alt="">
 <a href="/">top画面</a>
 
 {% endblock %}
