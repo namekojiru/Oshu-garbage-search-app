@@ -110,9 +110,23 @@ def camer():
             confidence_score = prediction[0][index]
 
             # Print prediction and confidence score
-            kekka = gomi[int(class_name[2:])]
+            search = gomi[int(class_name[2:])]
+
+            result = []
+
+            dt_now = datetime.datetime.now()
+            a = Rireki(gomi = search, time = dt_now)
+            a.save()
+
+            gomi = List.Gomi_list()
             
-            return render_template("camer.html",filename=filename,kekka=kekka)
+            for i in gomi:
+                for f in i:
+                    if search in f[0]:
+                        if type(f) != str:
+                            result.append(f)
+            
+            return render_template("camer.html",filename=filename,search=search,result=result)
     else:
         return render_template("camer.html")
 
