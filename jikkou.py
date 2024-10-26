@@ -1,16 +1,28 @@
-from flask import Flask
-from flask import render_template
-from flask import request
-from flask import url_for
-from flask import redirect
+from flask import Flask,render_template,request,redirect,url_for,flash
+from PIL import Image, ImageOps
 import pickle
 from peewee import *
 import datetime
+import os
+from werkzeug.utils import secure_filename
+from flask import send_from_directory
+from keras.models import load_model
+from PIL import Image
+import numpy as np
 
+UPLOAD_FOLDER = './static/uploads'
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif'])
 
 app = Flask(__name__)
+app.secret_key = 'secret_key'
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+def allwed_file(filename):
+    # .があるかどうかのチェックと、拡張子の確認
+    # OKなら１、だめなら0
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @app.route("/")
 def index():
     return render_template("top.html")
@@ -42,14 +54,72 @@ def html():
 
 @app.route("/camer",methods=["POST","GET"])
 def camer():
+    gomi = ["ペットボトル","缶","ビン"]
     if request.method == 'POST':
-        file = request.files["file"]
-        
-        return render_template("camer.html", file=file)
+        if 'file' not in request.files:
+            flash('ファイルがありません')
+            return redirect(request.url)
+        # データの取り出し
+        file = request.files['file']
+        # ファイル名がなかった時の処理
+        if file.filename == '':
+            flash('ファイルがありません')
+            return redirect(request.url)
+        # ファイルのチェック
+        if file and allwed_file(file.filename):
+            # 危険な文字を削除（サニタイズ処理）
+            filename = secure_filename(file.filename)
+            # ファイルの保存
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # アップロード後のページに転送
+            img = Image.open(f"./static/uploads/{filename}")
 
+            np.set_printoptions(suppress=True)
 
+            # Load the model
+            model = load_model("./keras_Model.h5", compile=False)
+
+            # Load the labels
+            class_names = open("./labels.txt", "r").readlines()
+
+            # Create the array of the right shape to feed into the keras model
+            # The 'length' or number of images you can put into the array is
+            # determined by the first position in the shape tuple, in this case 1
+            data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+
+            # Replace this with the path to your image
+            image = Image.open(f"./static/uploads/{filename}")
+
+            # resizing the image to be at least 224x224 and then cropping from the center
+            size = (224, 224)
+            image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
+
+            # turn the image into a numpy array
+            image_array = np.asarray(image)
+
+            # Normalize the image
+            normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
+
+            # Load the image into the array
+            data[0] = normalized_image_array
+
+            # Predicts the model
+            prediction = model.predict(data)
+            index = np.argmax(prediction)
+            class_name = class_names[index]
+            confidence_score = prediction[0][index]
+
+            # Print prediction and confidence score
+            kekka = gomi[int(class_name[2:])]
+            
+            return render_template("camer.html",filename=filename,kekka=kekka)
     else:
         return render_template("camer.html")
+
+
+
+
+
 
 
 
