@@ -192,7 +192,7 @@ class Rireki(Model):
     class Meta:
         database = db
 
-app.run()
+app.run(host="0.0.0.0")
 
 
 
