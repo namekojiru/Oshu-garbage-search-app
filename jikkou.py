@@ -23,6 +23,14 @@ def allwed_file(filename):
     # .があるかどうかのチェックと、拡張子の確認
     # OKなら１、だめなら0
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def convert_to_rgb(image):
+    if image.shape == (224,224,4):
+        image = image[:,:,:3]
+    return image
+    
+
+
 @app.route("/")
 def index():
     return render_template("top.html")
@@ -99,9 +107,9 @@ def camer():
 
             # Normalize the image
             normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
-
+            aa = convert_to_rgb(normalized_image_array)
             # Load the image into the array
-            data[0] = normalized_image_array
+            data[0] = aa
 
             # Predicts the model
             prediction = model.predict(data)
@@ -182,7 +190,7 @@ class List():
             gomi = pickle.load(f)
         return gomi
 
-db = SqliteDatabase('rirekis.db')
+rireki_db = SqliteDatabase('rirekis.db')
 
 
 class Rireki(Model):
@@ -190,9 +198,17 @@ class Rireki(Model):
     time = DateTimeField()
 
     class Meta:
-        database = db
+        database = rireki_db
+oshu_db = SqliteDatabase("gomi.db")
 
-app.run(host="0.0.0.0")
+class Oshu_gomi(Model):
+    gomi = CharField()
+    category = CharField()
+    material = CharField()
+    class Meta:
+        database = oshu_db
+
+app.run(host="0.0.0.0",debug=True)
 
 
 

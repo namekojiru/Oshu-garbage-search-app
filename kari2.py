@@ -1,6 +1,24 @@
 import requests
 from bs4 import BeautifulSoup
 import pickle
+from peewee import *
+
+db = SqliteDatabase('gomi.db')
+class Oshu_gomi(Model):
+    gomi = CharField()
+    category = CharField()
+    material = CharField(null = True)
+    title = CharField()
+    class Meta:
+        database = db
+
+def add_gomi(gomi,category,material,title):
+    b = Oshu_gomi(gomi=gomi,category=category,material=material,title=title)
+    b.save()
+
+db.drop_tables([Oshu_gomi])
+db.create_tables([Oshu_gomi])
+
 
 # スクレイピングでHTMLを取得
 html_content = requests.get("https://www.city.oshu.iwate.jp/soshiki/5/1051/2/1/246.html")
@@ -37,14 +55,21 @@ for i in table:
         material= row.find_all("td")[0].get_text()
          
         a.append([item, category, material])
+        if material == " ":
+            b = Oshu_gomi(gomi=item,category=category,material=None,title=table_a_title)
+        else:
+            b = Oshu_gomi(gomi=item,category=category,material=material,title=table_a_title)
+
+        b.save()
+
 
     gomi_list.append(a)
 
 
+
 with open("linklist.txt", mode="wb") as f:
     pickle.dump(gomi_list,f)
-for i in gomi_list:
-    for f in i:
-        if "か" in f[0]:
-            if type(f) != str:
-                print(f[2])
+
+
+for i in Oshu_gomi.select():
+    print(i.material)
