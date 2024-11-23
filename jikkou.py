@@ -56,7 +56,7 @@ def html():
         return render_template("top.html", result=result, search=search)
 
     else:
-        return render_template("top.html")
+        return render_template("top.html", result=[], search="")
 
             
 

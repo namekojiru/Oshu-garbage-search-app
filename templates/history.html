@@ -11,7 +11,7 @@
 
 {% block content %}
 <table border="1">
-{% for i in Rireki.select() %}
+{% for i in Rireki.select().order_by(Rireki.id.desc()) %}
     <tr>
         <td>{{ i.time }}</td>
         <td><a href="/">{{ i.gomi }}</a></td>
