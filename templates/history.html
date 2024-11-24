@@ -5,7 +5,7 @@
 {% block heading %} 検索履歴 {% endblock %}
 
 {% block explanation %}
-<p>検索履歴</p>
+<p>検索履歴です</p>
 {% endblock %}
 
 
@@ -14,7 +14,7 @@
 {% for i in Rireki.select().order_by(Rireki.id.desc()) %}
     <tr>
         <td>{{ i.time }}</td>
-        <td><a href="/">{{ i.gomi }}</a></td>
+        <td><a href="/search?search={{i.gomi}}">{{ i.gomi }}</a></td>
     </tr>
 {% endfor %}
 </table>

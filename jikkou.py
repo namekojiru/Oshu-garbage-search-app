@@ -56,7 +56,20 @@ def html():
         return render_template("top.html", result=result, search=search)
 
     else:
-        return render_template("top.html", result=[], search="")
+
+        search = request.args.get("search","")
+        result = []
+        
+        
+
+        gomi = List.Gomi_list()
+        
+        for i in gomi:
+            for f in i:
+                if search in f[0]:
+                    if type(f) != str:
+                        result.append(f)
+        return render_template("top.html", result=result, search=search)
 
             
 
@@ -138,13 +151,6 @@ def camer():
     else:
         return render_template("camer.html")
 
-
-
-
-
-
-
-
 @app.route("/characterlist")
 def characterlist():
     gomi = List.Gomi_list()
@@ -169,8 +175,7 @@ def list(id):
         if i[0] == japan:
             new_gomi = i
             del new_gomi[0]
-    print(new_gomi)
-    
+                
     return render_template("list.html",list=new_gomi,character=japan)
 @app.route("/history")
 def history():
