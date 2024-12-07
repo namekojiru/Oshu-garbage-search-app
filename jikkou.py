@@ -1,6 +1,5 @@
 from flask import Flask,render_template,request,redirect,url_for,flash
 from PIL import Image, ImageOps
-import pickle
 from peewee import *
 import datetime
 import os
@@ -12,7 +11,7 @@ import numpy as np
 
 UPLOAD_FOLDER = './static/uploads'
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
@@ -27,51 +26,25 @@ def allwed_file(filename):
 def convert_to_rgb(image):
     if image.shape == (224,224,4):
         image = image[:,:,:3]
-    return image
-    
-
+    return image    
 
 @app.route("/")
 def index():
-    return render_template("top.html")
 
+    search = request.args.get("search","")
+    result = []
 
-@app.route("/search",methods=["POST","GET"])
-def html():
-    if request.method == "POST":
-        search = request.form["search"]
-        result = []
+    dt_now = datetime.datetime.now()
+    a = Rireki(gomi = search, time = dt_now)
+    a.save()
 
-        dt_now = datetime.datetime.now()
-        a = Rireki(gomi = search, time = dt_now)
-        a.save()
+    gomi = List.Gomi_list()
+    
+    for i in gomi:
+        if search in i[0]:
+            result.append(i)
 
-        gomi = List.Gomi_list()
-        
-        for i in gomi:
-            for f in i:
-                if search in f[0]:
-                    if type(f) != str:
-                        result.append(f)
-        return render_template("top.html", result=result, search=search)
-
-    else:
-
-        search = request.args.get("search","")
-        result = []
-        
-        
-
-        gomi = List.Gomi_list()
-        
-        for i in gomi:
-            for f in i:
-                if search in f[0]:
-                    if type(f) != str:
-                        result.append(f)
-        return render_template("top.html", result=result, search=search)
-
-            
+    return render_template("top.html", result=result, search=search)
 
 @app.route("/camer",methods=["POST","GET"])
 def camer():
@@ -98,10 +71,10 @@ def camer():
             np.set_printoptions(suppress=True)
 
             # Load the model
-            model = load_model("./keras_Model.h5", compile=False)
+            model = load_model("./keras_model.h5", compile=False)
 
             # Load the labels
-            class_names = open("./labels.txt", "r").readlines()
+            class_names = ["本","鉛筆","缶","ペットボトル","ビン"]
 
             # Create the array of the right shape to feed into the keras model
             # The 'length' or number of images you can put into the array is
@@ -124,28 +97,21 @@ def camer():
             # Load the image into the array
             data[0] = aa
 
-            # Predicts the model
             prediction = model.predict(data)
-            index = np.argmax(prediction)
-            class_name = class_names[index]
-            confidence_score = prediction[0][index]
 
-            # Print prediction and confidence score
-            search = gomi[int(class_name[2:])]
+            prediction = [round(i*100) for i in prediction[0]]
 
-            result = []
-
-            dt_now = datetime.datetime.now()
-            a = Rireki(gomi = search, time = dt_now)
-            a.save()
+            search = dict(zip(class_names, prediction))
+            search = dict(sorted({f:i for f,i in search.items() if i > 30}.items()))
+            print(search)
+            result = {}
 
             gomi = List.Gomi_list()
-            
-            for i in gomi:
-                for f in i:
-                    if search in f[0]:
-                        if type(f) != str:
-                            result.append(f)
+            for i in search.keys():
+                for f in gomi:
+                    if i in f[0]:
+                        result[f] = i
+            print(result)
             
             return render_template("camer.html",filename=filename,search=search,result=result)
     else:
@@ -153,33 +119,40 @@ def camer():
 
 @app.route("/characterlist")
 def characterlist():
-    gomi = List.Gomi_list()
-    gomi_initials = []
-    for i in gomi:
-        for f in i:
-            if type(f) == str:
-                gomi_initials.append(f)
-    return render_template("characterlist.html",gomi=gomi_initials)
 
-@app.route("/list/<int:id>")
-def list(id):
     gomi = List.Gomi_list()
-    gomi_initials = []
+    gomi_title = []
     for i in gomi:
-        for f in i:
-            if type(f) == str:
-                gomi_initials.append(f)
-    
-    japan = gomi_initials[id]
+        gomi_title.append(i[3])
+    title_list = []
+    [title_list.append(x) for x in gomi_title if x not in title_list]
+
+    return render_template("characterlist.html",gomi=title_list)
+
+@app.route("/list")
+def list():
+    title = request.args.get("title","")
+    result = []
+    gomi=List.Gomi_list()
     for i in gomi:
-        if i[0] == japan:
-            new_gomi = i
-            del new_gomi[0]
+        if title == i[3]:
+            result.append(i)
                 
-    return render_template("list.html",list=new_gomi,character=japan)
+    return render_template("list.html",result=result,title=title)
 @app.route("/history")
 def history():
     return render_template("history.html",Rireki=Rireki)
+
+@app.route("/delete/<int:id>",methods=["POST"])
+def delete_history(id):
+    rireki=Rireki.get(Rireki.id == id)
+    rireki.delete_instance()
+    return redirect(url_for("history"))
+
+@app.route("/all_delete",methods=["POST"])
+def all_delete_history():
+    Rireki.delete().execute()
+    return redirect(url_for("history"))
 
 @app.errorhandler(404)
 def show_404_page(error):
@@ -188,15 +161,16 @@ def show_404_page(error):
 
     return render_template("errors/404.html") , 404
 
-
 class List():
     def Gomi_list():
-        with open("linklist.txt", "rb") as f:
-            gomi = pickle.load(f)
+        gomi = []
+
+        for i in Oshu_gomi.select():
+            a = (i.gomi,i.category,i.material,i.title)
+            gomi.append(a)
         return gomi
 
-rireki_db = SqliteDatabase('rirekis.db')
-
+rireki_db = SqliteDatabase('rireki.db')
 
 class Rireki(Model):
     gomi = CharField()
@@ -204,14 +178,17 @@ class Rireki(Model):
 
     class Meta:
         database = rireki_db
-oshu_db = SqliteDatabase("gomi.db")
+rireki_db.create_tables([Rireki])
+
+oushu_db = SqliteDatabase('gomi.db')
 
 class Oshu_gomi(Model):
     gomi = CharField()
     category = CharField()
-    material = CharField()
+    material = CharField(null = True)
+    title = CharField()
     class Meta:
-        database = oshu_db
+        database = oushu_db
 
 app.run(host="0.0.0.0",debug=True)
 

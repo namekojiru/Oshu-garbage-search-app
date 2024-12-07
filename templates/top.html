@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<form action="/search" method="get">
+<form action="/" method="get">
 
     <input type="search" name="search" class="input-group-text">
 
@@ -30,22 +30,20 @@
     {% else %}
         <ul>
             {% for i in result %}
-                {% if i[2] == "\xa0" %}
+                {% if i[2] == None %}
                     <li>{{ i[0] }} : {{ i[1] }}</li>
                 {% else %}
-                    <li>{{ i[0] }}[{{ i[2]}}] : {{ i[1] }}</li>
+                    <li>{{ i[0] }}[{{ i[2] }}] : {{ i[1] }}</li>
                 {% endif %}
             {% endfor %}
         </ul>
     {% endif %}
 {% endif %}
-
-<hr>
-<div class="list-group">
-  <a href="{{ url_for('camer') }}" class="list-group-item list-group-item-action">画像で検索</a>
-  <a href="{{ url_for('characterlist') }}" class="list-group-item list-group-item-action">一覧</a>
-  <a href="{{ url_for('history') }}" class="list-group-item list-group-item-action">検索履歴</a>
-</div>
-
-
 {% endblock %}
+
+{% block link %}
+  <a href="camer" class="list-group-item list-group-item-action">画像で検索</a>
+  <a href="characterlist" class="list-group-item list-group-item-action">一覧</a>
+  <a href="history" class="list-group-item list-group-item-action">検索履歴</a>
+{% endblock %}
+

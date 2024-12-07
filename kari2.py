@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import pickle
 from peewee import *
 
 db = SqliteDatabase('gomi.db')
@@ -64,12 +63,6 @@ for i in table:
 
 
     gomi_list.append(a)
-
-
-
-with open("linklist.txt", mode="wb") as f:
-    pickle.dump(gomi_list,f)
-
 
 for i in Oshu_gomi.select():
     print(i.material)

@@ -22,23 +22,22 @@
 </form>
 <p>{{filename}}</p>
 
-{% if not search == "" %}
-    <h2>"{{search}}"の検索結果</h2>
-    {% if result == "" %}
-        <p>ありませんでした</p>
-    {% else %}
-        <ul>
-            {% for i in result %}
-                {% if i[2] == "\xa0" %}
-                    <li>{{ i[0] }} : {{ i[1] }}</li>
-                {% else %}
-                    <li>{{ i[0] }}[{{ i[2]}}] : {{ i[1] }}</li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endif %}
-<a href="/">top画面</a>
+<h1>{{search}}</h1>
+<!--
+<ul>
+    {% for i in result %}
+        {% if i[2] == None %}
+            <li>{{ i[0] }} : {{ i[1] }}</li>
+        {% else %}
+            <li>{{ i[0] }}[{{ i[2] }}] : {{ i[1] }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
 
+-->
+{% endblock %}
+
+{% block link %}
+  <a href="/" class="list-group-item list-group-item-action">top画面</a>
 {% endblock %}
 
