@@ -5,31 +5,29 @@
 {% block heading  %} 一覧({{title}}行) {% endblock %}
 
 {% block explanation %}
-<p>{{title}}行の一覧です</p>
+  <p>{{title}}行の一覧です</p>
 {% endblock %}
 
 {% block content %}
 <table border="1">
+  <tr>
+    <th>ゴミ</th>
+    <th>分別</th>
+  </tr>
+
+  {% for i in result %}
     <tr>
-        <th>ゴミ</th>
-        <th>分別</th>
-    </tr>
-
-    
-
-{% for i in result %}
-<tr>
     {% if i[2] == None %}
-        <td>{{ i[0] }}</td><td>{{ i[1] }}</td>
+      <td>{{ i[0] }}</td><td>{{ i[1] }}</td>
     {% else %}
-        <td>{{ i[0] }}[{{ i[2] }}]</td><td>{{ i[1] }}</td>
+      <td>{{ i[0] }}[{{ i[2] }}]</td><td>{{ i[1] }}</td>
     {% endif %}
-</tr>
-{% endfor %}
+    </tr>
+  {% endfor %}
 </table>
 {% endblock %}
 {% block link %}
-  <a href="/characterlist" class="list-group-item list-group-item-action">五十音順一覧</a>
-  <a href="/" class="list-group-item list-group-item-action">top画面</a>
+<a href="/characterlist" class="list-group-item list-group-item-action">五十音順一覧</a>
+<a href="/" class="list-group-item list-group-item-action">top画面</a>
 {% endblock %}
 

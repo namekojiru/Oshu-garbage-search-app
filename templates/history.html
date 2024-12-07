@@ -14,19 +14,19 @@
   <button type="submit">すべて削除</button>
 </form>
 <table border="1">
-{% for i in Rireki.select().order_by(Rireki.id.desc()) %}
-    <tr>
+  {% for i in Rireki.select().order_by(Rireki.id.desc()) %}
+  <tr>
 
-      <td>{{ i.time }}</td>
-      <td><a href="/?search={{i.gomi}}">{{ i.gomi }}</a></td>
-      <form method="post" action="{{url_for('delete_history',id=i.id)}}">
-        <td><button type="submit">削除</button></td>
-      </form>
-    </tr>
-{% endfor %}
+    <td>{{ i.time }}</td>
+    <td><a href="/?search={{i.gomi}}">{{ i.gomi }}</a></td>
+    <form method="post" action="{{url_for('delete_history',id=i.id)}}">
+      <td><button type="submit">削除</button></td>
+    </form>
+  </tr>
+  {% endfor %}
 </table>
 {% endblock %}
 
 {% block link %}
-  <a href="/" class="list-group-item list-group-item-action">top画面</a>
+<a href="/" class="list-group-item list-group-item-action">top画面</a>
 {% endblock %}

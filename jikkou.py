@@ -33,16 +33,18 @@ def index():
 
     search = request.args.get("search","")
     result = []
+    if search != "":
 
-    dt_now = datetime.datetime.now()
-    a = Rireki(gomi = search, time = dt_now)
-    a.save()
 
-    gomi = List.Gomi_list()
-    
-    for i in gomi:
-        if search in i[0]:
-            result.append(i)
+        dt_now = datetime.datetime.now()
+        a = Rireki(gomi = search, time = dt_now)
+        a.save()
+
+        gomi = List.Gomi_list()
+        
+        for i in gomi:
+            if search in i[0]:
+                result.append(i)
 
     return render_template("top.html", result=result, search=search)
 
@@ -115,7 +117,7 @@ def camer():
             
             return render_template("camer.html",filename=filename,search=search,result=result)
     else:
-        return render_template("camer.html")
+        return render_template("camer.html",filename="",search="",result=[])
 
 @app.route("/characterlist")
 def characterlist():
