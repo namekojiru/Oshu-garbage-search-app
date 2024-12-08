@@ -35,7 +35,6 @@ def index():
     result = []
     if search != "":
 
-
         dt_now = datetime.datetime.now()
         a = Rireki(gomi = search, time = dt_now)
         a.save()
@@ -110,6 +109,9 @@ def camer():
 
             gomi = List.Gomi_list()
             for i in search.keys():
+                dt_now = datetime.datetime.now()
+                a = Rireki(gomi = i, time = dt_now)
+                a.save()
                 for f in gomi:
                     if i in f[0]:
                         result[f] = i
@@ -154,6 +156,7 @@ def delete_history(id):
 @app.route("/all_delete",methods=["POST"])
 def all_delete_history():
     Rireki.delete().execute()
+    rireki_db.create_tables([Rireki])
     return redirect(url_for("history"))
 
 @app.errorhandler(404)
