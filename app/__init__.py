@@ -14,8 +14,9 @@ def create_app():
     @app.context_processor
     def context_processor():
         return dict(get_locale=get_locale)
-
-    from . import routes
-    routes.init_app(app)
+    
+    with app.app_context():
+        from . import routes
+        routes.init_app(app)
     
     return app

@@ -14,7 +14,6 @@ UPLOAD_FOLDER = './static/uploads'
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 
-#app = Flask(__name__)
 app.secret_key = 'secret_key'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -29,24 +28,23 @@ def convert_to_rgb(image):
         image = image[:,:,:3]
     return image    
 
-def init_app(app):
-    @app.route("/")
-    def index():
-        search = request.args.get("search","")
-        result = []
-        if search != "":
+@app.route("/")
+def index():
+    search = request.args.get("search","")
+    result = []
+    if search != "":
 
-            dt_now = datetime.datetime.now()
-            a = Rireki(gomi = search, time = dt_now)
-            a.save()
+        dt_now = datetime.datetime.now()
+        a = Rireki(gomi = search, time = dt_now)
+        a.save()
 
-            gomi = List.Gomi_list()
-            
-            for i in gomi:
-                if search in i[0]:
-                    result.append(i)
+        gomi = List.Gomi_list()
+        
+        for i in gomi:
+            if search in i[0]:
+                result.append(i)
 
-        return render_template("top.html", result=result, search=search)
+    return render_template("top.html", result=result, search=search)
 
 @app.route("/camer",methods=["POST","GET"])
 def camer():
