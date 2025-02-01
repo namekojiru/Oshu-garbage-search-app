@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-10 12:47+0900\n"
+"POT-Creation-Date: 2025-01-25 09:51+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,87 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: app/templates/top.html:8
-msgid "このサイトでは奥州市のごみを簡単に検索することが出来ます"
+#: app/templates/base.html:26 app/templates/list.html:3
+#: app/templates/list.html:5 app/templates/top.html:48
+msgid "一覧"
+msgstr ""
+
+#: app/templates/base.html:29 app/templates/top.html:49
+msgid "履歴"
+msgstr ""
+
+#: app/templates/base.html:32 app/templates/camer.html:3
+msgid "画像"
+msgstr ""
+
+#: app/templates/base.html:69 app/templates/camer.html:22
+#: app/templates/top.html:24
+msgid "検索"
+msgstr ""
+
+#: app/templates/camer.html:5 app/templates/top.html:47
+msgid "画像で検索"
+msgstr ""
+
+#: app/templates/camer.html:8
+msgid "画像ファイルをを選択して検索することができます"
+msgstr ""
+
+#: app/templates/camer.html:47 app/templates/characterlist.html:26
+#: app/templates/history.html:31 app/templates/list.html:31
+msgid "top画面"
+msgstr ""
+
+#: app/templates/characterlist.html:3 app/templates/characterlist.html:5
+#: app/templates/list.html:30
+msgid "五十音順一覧"
+msgstr ""
+
+#: app/templates/characterlist.html:8
+msgid "探したいごみの頭文字を選んでください"
+msgstr ""
+
+#: app/templates/history.html:3 app/templates/history.html:5
+msgid "検索履歴"
+msgstr ""
+
+#: app/templates/history.html:8
+msgid "検索履歴です"
+msgstr ""
+
+#: app/templates/history.html:14
+msgid "すべて削除"
+msgstr ""
+
+#: app/templates/history.html:23
+msgid "削除"
+msgstr ""
+
+#: app/templates/list.html:8
+msgid "の一覧です"
+msgstr ""
+
+#: app/templates/list.html:14
+msgid "ゴミ"
+msgstr ""
+
+#: app/templates/list.html:15
+msgid "分別"
+msgstr ""
+
+#: app/templates/top.html:5
+msgid "TOP"
+msgstr ""
+
+#: app/templates/top.html:10
+msgid "このサイトでは奥州市のゴミの分別を調べることができます。"
+msgstr ""
+
+#: app/templates/top.html:29
+msgid "の検索結果"
+msgstr ""
+
+#: app/templates/top.html:31
+msgid "ありませんでした"
 msgstr ""
 

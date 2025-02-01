@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 
-{% block title %} 検索履歴 {% endblock %}
+{% block title %} {{ _("検索履歴") }} {% endblock %}
 
-{% block heading %} 検索履歴 {% endblock %}
+{% block heading %} {{ _("検索履歴") }} {% endblock %}
 
 {% block explanation %}
-<p>検索履歴です</p>
+<p>{{ _("検索履歴です。") }}</p>
 {% endblock %}
 
 
 {% block content %}
 <form method="post" action="{{url_for('all_delete_history')}}">
-  <button type="submit">すべて削除</button>
+  <button type="submit">{{ _("すべて削除") }}</button>
 </form>
 <table border="1">
   {% for i in Rireki.select().order_by(Rireki.id.desc()) %}
   <tr>
 
     <td>{{ i.time }}</td>
-    <td><a href="/?search={{i.gomi}}">{{ i.gomi }}</a></td>
+    <td><a href="/{{lang}}&search={{i.gomi}}">{{ i.gomi }}</a></td>
     <form method="post" action="{{url_for('delete_history',id=i.id)}}">
-      <td><button type="submit">削除</button></td>
+      <td><button type="submit">{{ _("削除") }}</button></td>
     </form>
   </tr>
   {% endfor %}
@@ -28,5 +28,5 @@
 {% endblock %}
 
 {% block link %}
-<a href="/" class="list-group-item list-group-item-action">top画面</a>
+<a href="/{{lang}}" class="list-group-item list-group-item-action">{{ _("top画面") }}</a>
 {% endblock %}

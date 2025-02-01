@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,redirect,url_for,flash
+from flask import Flask,render_template,request,redirect,url_for,flash,g
 from PIL import Image, ImageOps
 from peewee import *
 import datetime
@@ -10,7 +10,10 @@ from PIL import Image
 import numpy as np
 from flask import render_template
 from flask import current_app as app
-UPLOAD_FOLDER = './static/uploads'
+
+
+
+UPLOAD_FOLDER = './app/static/uploads'
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 
@@ -28,23 +31,32 @@ def convert_to_rgb(image):
         image = image[:,:,:3]
     return image    
 
+def lang():
+    l = request.args.get("lang")
+    if l == None:
+        return "?lang=ja"
+    else:
+        return "?lang="+l
+
+    
 @app.route("/")
 def index():
     search = request.args.get("search","")
     result = []
     if search != "":
-
+        
         dt_now = datetime.datetime.now()
         a = Rireki(gomi = search, time = dt_now)
         a.save()
 
-        gomi = List.Gomi_list()
+        gomi = List.Gomi_list(request.args.get("lang"))
         
         for i in gomi:
             if search in i[0]:
                 result.append(i)
+    
+    return render_template("top.html", result=result, search=search,lang=lang())
 
-    return render_template("top.html", result=result, search=search)
 
 @app.route("/camer",methods=["POST","GET"])
 def camer():
@@ -66,12 +78,12 @@ def camer():
             # ファイルの保存
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # アップロード後のページに転送
-            img = Image.open(f"./static/uploads/{filename}")
+            img = Image.open(f"./app/static/uploads/{filename}")
 
             np.set_printoptions(suppress=True)
 
             # Load the model
-            model = load_model("./keras_model.h5", compile=False)
+            model = load_model("./app/keras_model.h5", compile=False)
 
             # Load the labels
             class_names = ["本","鉛筆","缶","ペットボトル","ビン"]
@@ -82,7 +94,7 @@ def camer():
             data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
             # Replace this with the path to your image
-            image = Image.open(f"./static/uploads/{filename}")
+            image = Image.open(f"./app/static/uploads/{filename}")
 
             # resizing the image to be at least 224x224 and then cropping from the center
             size = (224, 224)
@@ -106,7 +118,7 @@ def camer():
             print(search)
             result = {}
 
-            gomi = List.Gomi_list()
+            gomi = List.Gomi_list(request.args.get("lang"))
             for i in search.keys():
                 dt_now = datetime.datetime.now()
                 a = Rireki(gomi = i, time = dt_now)
@@ -116,35 +128,50 @@ def camer():
                         result[f] = i
             print(result)
             
-            return render_template("camer.html",filename=filename,search=search,result=result)
+            return render_template("camer.html",filename=filename,search=search,result=result,lang=lang())
     else:
-        return render_template("camer.html",filename="",search="",result=[])
+        return render_template("camer.html",filename="",search="",result=[],lang=lang())
 
 @app.route("/characterlist")
 def characterlist():
 
-    gomi = List.Gomi_list()
-    gomi_title = []
-    for i in gomi:
-        gomi_title.append(i[3])
-    title_list = []
-    [title_list.append(x) for x in gomi_title if x not in title_list]
+    gomi = List.Gomi_list(request.args.get("lang"))
+    if str(request.args.get("lang")) in ["en","zh","ko"]:
+        title_list = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    else:
+        gomi_title = []
+        for i in gomi:
+            gomi_title.append(i[3])
+        title_list = []
+        [title_list.append(x) for x in gomi_title if x not in title_list]
 
-    return render_template("characterlist.html",gomi=title_list)
+    return render_template("characterlist.html",gomi=title_list,lang=lang())
 
 @app.route("/list")
 def list():
     title = request.args.get("title","")
     result = []
-    gomi=List.Gomi_list()
-    for i in gomi:
-        if title == i[3]:
-            result.append(i)
-                
-    return render_template("list.html",result=result,title=title)
+    if str(request.args.get("lang")) ==  "ja":
+        gomi=List.Gomi_list(request.args.get("lang"))
+        for i in gomi:
+            if title == i[3]:
+                result.append(i)
+    else:
+        gomi=List.Gomi_list("en")
+        gomi_index = []
+        print(gomi)
+        for i in gomi:
+            if title == i[3]:
+                gomi_index.append(gomi.index(i))
+        gomi=List.Gomi_list(request.args.get("lang"))
+        for i in gomi:
+            if gomi.index(i) in gomi_index:
+                result.append(i)
+
+    return render_template("list.html",result=result,title=title,lang=lang())
 @app.route("/history")
 def history():
-    return render_template("history.html",Rireki=Rireki)
+    return render_template("history.html",Rireki=Rireki,lang=lang())
 
 @app.route("/delete/<int:id>",methods=["POST"])
 def delete_history(id):
@@ -165,12 +192,26 @@ def show_404_page(error):
 
     return render_template("errors/404.html") , 404
 class List():
-    def Gomi_list():
+    def Gomi_list(lang):
         gomi = []
 
-        for i in Oshu_gomi.select():
-            a = (i.gomi,i.category,i.material,i.title)
-            gomi.append(a)
+        if lang == "en":
+            for i in Oshu_gomi_en.select():
+                a = (i.gomi_en,i.category_en,i.material_en,i.title_en)
+                gomi.append(a)
+        elif lang == "zh":
+            for i in Oshu_gomi_zh.select():
+                a = (i.gomi_zh,i.category_zh,i.material_zh,i.title_zh)
+                gomi.append(a)
+        elif lang == "ko":
+            for i in Oshu_gomi_ko.select():
+                a = (i.gomi_ko,i.category_ko,i.material_ko,i.title_ko)
+                gomi.append(a)
+        else:
+            for i in Oshu_gomi.select():
+                a = (i.gomi,i.category,i.material,i.title)
+                gomi.append(a)
+        
         return gomi
 
 rireki_db = SqliteDatabase('rireki.db')
@@ -183,7 +224,7 @@ class Rireki(Model):
         database = rireki_db
 rireki_db.create_tables([Rireki])
 
-oushu_db = SqliteDatabase('gomi.db')
+gomi_db = SqliteDatabase('gomi.db')
 
 class Oshu_gomi(Model):
     gomi = CharField()
@@ -191,8 +232,28 @@ class Oshu_gomi(Model):
     material = CharField(null = True)
     title = CharField()
     class Meta:
-        database = oushu_db
-
+        database = gomi_db
+class Oshu_gomi_en(Model):
+    gomi_en = CharField()
+    category_en = CharField()
+    material_en = CharField(null = True)
+    title_en  = CharField()
+    class Meta:
+        database = gomi_db
+class Oshu_gomi_zh(Model):
+    gomi_zh = CharField()
+    category_zh = CharField()
+    material_zh = CharField(null = True)
+    title_zh  = CharField()
+    class Meta:
+        database = gomi_db
+class Oshu_gomi_ko(Model):
+    gomi_ko = CharField()
+    category_ko = CharField()
+    material_ko = CharField(null = True)
+    title_ko  = CharField()
+    class Meta:
+        database = gomi_db
 app.run(host="0.0.0.0",debug=True)
 
 

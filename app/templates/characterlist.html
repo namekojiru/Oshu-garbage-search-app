@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %} 五十音順一覧 {% endblock %}
+{% block title %} {{ _("五十音順一覧") }} {% endblock %}
 
-{% block heading %} 五十音順一覧 {% endblock %}
+{% block heading %} {{ _("五十音順一覧") }} {% endblock %}
 
 {% block explanation %}
-<p>探したいごみの頭文字を選んでください</p>
+<p>{{ _("探したいごみの頭文字を選んでください。") }}</p>
 {% endblock %}
 
 {% block content %}
@@ -13,15 +13,15 @@
 <table border="1">
   {% for i in gomi %}
     {% if loop.index % 10 == 0 %}
-      <td><a href="/list?title={{i}}">{{ i }}</a></td>
+      <td><a href="/list{{lang}}&title={{i}}">{{ i }}</a></td>
       <tr></tr>
     {% else %}
-      <td><a href="/list?title={{i}}">{{ i }}</a></td>
+      <td><a href="/list{{lang}}&title={{i}}">{{ i }}</a></td>
     {% endif %}
   {% endfor %}
 </table>
 {% endblock %}
 
 {% block link %}
-<a href="/" class="list-group-item list-group-item-action">top画面</a>
+<a href="/{{lang}}" class="list-group-item list-group-item-action">{{ _("top画面") }}</a>
 {% endblock %}

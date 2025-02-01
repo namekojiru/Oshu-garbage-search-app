@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %} 画像 {% endblock %}
+{% block title %} {{ _("画像") }} {% endblock %}
 
-{% block heading %} 画像で検索 {% endblock %}
+{% block heading %} {{ _("画像で検索") }} {% endblock %}
 
 {% block explanation %}
-<p>画像ファイルをを選択して検索することができます</p>
+<p>{{ _("画像ファイルを選択して検索することができます。") }}</p>
 {% endblock %}
 
 
@@ -19,7 +19,7 @@
       <path
         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
     </svg>
-    検索
+    {{ _("検索") }}
   </button>
 </form>
 {% if not filename == "" %}
@@ -44,5 +44,5 @@
 {% endblock %}
 
 {% block link %}
-<a href="/" class="list-group-item list-group-item-action">top画面</a>
+<a href="/{{lang}}" class="list-group-item list-group-item-action">{{ _("top画面") }}</a>
 {% endblock %}

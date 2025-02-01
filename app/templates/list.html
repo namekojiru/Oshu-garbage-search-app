@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %} 一覧 {% endblock %}
+{% block title %} {{ _("一覧") }} {% endblock %}
 
-{% block heading  %} 一覧({{title}}) {% endblock %}
+{% block heading  %} {{ _("一覧") }}({{title}}) {% endblock %}
 
 {% block explanation %}
-  <p>{{title}}の一覧です</p>
+  <p>{{title}}{{ _("の一覧です。") }}</p>
 {% endblock %}
 
 {% block content %}
 <table border="1">
   <tr>
-    <th>ゴミ</th>
-    <th>分別</th>
+    <th>{{ _("ゴミ") }}</th>
+    <th>{{ _("分別") }}</th>
   </tr>
 
   {% for i in result %}
@@ -27,7 +27,7 @@
 </table>
 {% endblock %}
 {% block link %}
-<a href="/characterlist" class="list-group-item list-group-item-action">五十音順一覧</a>
-<a href="/" class="list-group-item list-group-item-action">top画面</a>
+<a href="/characterlist{{lang}}" class="list-group-item list-group-item-action">{{ _("五十音順一覧") }}</a>
+<a href="/{{lang}}" class="list-group-item list-group-item-action">{{ _("top画面") }}</a>
 {% endblock %}
 
