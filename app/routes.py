@@ -60,7 +60,7 @@ def index():
 
 @app.route("/camer",methods=["POST","GET"])
 def camer():
-    gomi = ["アイロン","ビン","鉛筆","画鋲","印鑑","椅子","カメラ","紙パック","缶","傘","靴","鍋","パソコン","ペン","ペットボトル","ハサミ","電池","本","フライパン","水筒","クリップ","電卓","ケーブル","イヤホン","ノート","テープ","ホチキス","財布"]
+    gomi = ["缶","ティッシュペーパーの箱","ビン","鉛筆","ペットボトル","本","ペン","靴","カッター","マウス"]
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('ファイルがありません')
@@ -84,9 +84,6 @@ def camer():
 
             # Load the model
             model = load_model("./app/keras_model.h5", compile=False)
-
-            # Load the labels
-            class_names = ["本","鉛筆","缶","ペットボトル","ビン"]
 
             # Create the array of the right shape to feed into the keras model
             # The 'length' or number of images you can put into the array is
@@ -113,7 +110,7 @@ def camer():
 
             prediction = [round(i*100) for i in prediction[0]]
 
-            search = dict(zip(class_names, prediction))
+            search = dict(zip(gomi, prediction))
             search = dict(sorted({f:i for f,i in search.items() if i > 30}.items()))
             print(search)
             result = {}
