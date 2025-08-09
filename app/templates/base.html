@@ -45,12 +45,8 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-dark">
               {% if "?" in request.url %}
-                {% if "lang" in request.url %}
-                  {% set iti = request.url.find("lang=") %}
-                  {% set URL = request.url[:iti] %}
-                {% else %}
-                  {% set URL = request.url + "&" %}
-                {% endif %}
+                {% set iti = request.url.find("lang=") %}
+                {% set URL = request.url[:iti] %}
               {% else %}
                 {% set URL = request.url + "?" %}
               {% endif %}
@@ -63,11 +59,9 @@
           </ul>
         </div>
 
-        <form class="d-flex" role="search" action="/" method="get">
+        <form class="d-flex" role="search" action="/" method="post">
           <input class="form-control me-1" type="search" placeholder="Search" aria-label="Search" name="search">
-          <button class="btn btn-secondary" type="submit">
-            {{ _("検索") }}
-          </button>
+          <input type="submit" class="btn btn-secondary" value="{{ _('検索') }}">
         </form>
 
 

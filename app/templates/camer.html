@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<form action="/camer" method="post" enctype="multipart/form-data">
+<form action="/camer{{lang}}" method="post" enctype="multipart/form-data">
   <input type="file" accept="image/*" name="file">
   <button type="submit" class="btn btn-outline-primary">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
@@ -40,7 +40,6 @@
     </ul>
   {% endfor %}
 {% endif %}
-
 {% endblock %}
 
 {% block link %}

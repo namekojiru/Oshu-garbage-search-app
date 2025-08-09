@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %} {{ _("ゴミカレンダー") }} {% endblock %}
+
+{% block heading %} {{ _("ゴミカレンダー") }} {% endblock %}
+
+{% block explanation %}
+<p>{{ _("ゴミカレンダーです") }}</p>
+{% endblock %}
+
+
+{% block content %}
+<form action="/calendar{{lang}}" method="post">
+  <select class="form-select" aria-label="Default select example">
+    <option selected>Open this select menu</option>
+    <option value="1">One</option>
+    <option value="2">Two</option>
+    <option value="3">Three</option>
+  </select>
+  <button type="submit" class="btn btn-primary submit">Primary</button>
+</form>
+<style type="text/css">
+  .field {
+    display: flex;
+    flex-wrap: wrap; /* 折り返し */
+    gap: 20px;/*縦・横で同じ余白*/
+    gap: 20px 30px;/*縦20px、横30pxの指定*/
+  }
+
+</style>
+<div class="field">
+{% for month in calendar %}
+
+  <table border="1" style="font-weight:bold;" >
+    <tr>
+      <th colspan="7">
+        {{monthes[loop.index0]}}月
+      </th>
+    </tr>
+    <tr>
+      <th>日</th>
+      <th>月</th>
+      <th>火</th>
+      <th>水</th>
+      <th>木</th>
+      <th>金</th>
+      <th>土</th>
+    </tr>
+    {% for week in month %}
+
+      <tr>
+        {% for day in week %}
+          {% if day | type == "'list'" %}
+            {% if day[1] == "y" %}
+            <td style="color: #ed1c24;">{{day[0]}}</td>
+            {% else %}
+            <td style="color: #0c4da2;">{{day[0]}}</td>
+            {% endif %}
+          {% else %}
+            {% if day == 0 %}
+            <td></td>
+            {% else %}
+            <td>{{day}}</td>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {% endfor %}
+
+  </table>
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block link %}
+<a href="/{{lang}}" class="list-group-item list-group-item-action">{{ _("top画面") }}</a>
+{% endblock %}

@@ -13,10 +13,10 @@
 <table border="1">
   {% for i in gomi %}
     {% if loop.index % 10 == 0 %}
-      <td><a href="/list{{lang}}&title={{i}}">{{ i }}</a></td>
+      <td><a href="/list/{{i}}{{lang}}"><button>{{ i }}</button></a></td>
       <tr></tr>
     {% else %}
-      <td><a href="/list{{lang}}&title={{i}}">{{ i }}</a></td>
+      <td><a href="/list/{{i}}{{lang}}"><button>{{ i }}</button></a></td>
     {% endif %}
   {% endfor %}
 </table>

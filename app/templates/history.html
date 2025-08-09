@@ -10,17 +10,23 @@
 
 
 {% block content %}
-<form method="post" action="{{url_for('all_delete_history')}}">
-  <button type="submit">{{ _("すべて削除") }}</button>
+<form method="post" action="/history{{lang}}" name="all_del">
+  <input type="hidden" name="del_index" value="-1">
+  <input type="submit" name="del" value="{{ _('すべて削除') }}">
 </form>
 <table border="1">
-  {% for i in Rireki.select().order_by(Rireki.id.desc()) %}
+  {% for i in history[::-1] %}
   <tr>
 
-    <td>{{ i.time }}</td>
-    <td><a href="/{{lang}}&search={{i.gomi}}">{{ i.gomi }}</a></td>
-    <form method="post" action="{{url_for('delete_history',id=i.id)}}">
-      <td><button type="submit">{{ _("削除") }}</button></td>
+    <td>{{ i[1] }}</td>
+    <form action="/{{lang}}" name="search_form" method="post">
+      <input type="hidden" name="search" value="{{ i[0] }}">
+      <td>{{ i[0] }}</td>
+      <td><input type="submit" value="検索"></td>
+    </form>
+    <form method="post" action="/history{{lang}}" name="del">
+      <input type="hidden" name="del_index" value="{{loop.index0}}">
+      <td><input type="submit" value="{{ _('削除') }}"></td>
     </form>
   </tr>
   {% endfor %}

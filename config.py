@@ -5,7 +5,8 @@ class Config:
     LANGUAGES = {
     'en': 'English',
     'ja': '日本語',
-    'zh' : '中国人'
+    'zh' : '中国人',
+    'ko' : '한국어'
     }
     BABEL_DEFAULT_LOCALE = 'ja'
     BABEL_TRANSLATION_DIRECTORIES = './translations'
